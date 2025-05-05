@@ -10,4 +10,10 @@ node_modules/
 /.allure-results/
 /.env
 data/
-
+dist/
+traces/
+metrics/
+dashboards/
+allure-results/
+allure-history/
+/test-results/

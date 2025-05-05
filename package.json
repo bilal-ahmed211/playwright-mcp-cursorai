@@ -1,10 +1,14 @@
 {
+  "/* $schema */": "Schema validation disabled due to connection issues",
   "name": "fyiai_playwright-ui",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "playwright test",
+    "build": "npx tsc --build --clean",
+    "build:watch": "tsc --watch",
+    "install:browsers": "npx playwright install",
+    "test": "npx playwright test",
     "test:web": "npx playwright test src/tests/web/",
     "test:api": "npx playwright test src/tests/api/",
     "test:petstore": "npx playwright test src/tests/api/PetStore/",
@@ -17,8 +21,14 @@
     "allure:generate": "allure generate ./allure-results -o ./allure-report --clean",
     "allure:open": "allure open ./allure-report",
     "allure:serve": "allure serve ./allure-results",
-    "install:browsers": "playwright install",
-    "report": "npm run allure:generate && npm run allure:open"
+    "generate:api:report": "npm run build && npx ts-node generate-api-reports.ts",
+    "enhance:report": "npm run build && node generate-reports.js",
+    "open:exec-summary:report": "start dashboards/latest-summary.html",
+    "open:dashboard": "start dashboards/trends-dashboard.html",
+    "open:api:performance:report": "npm run build && start dashboards/api/api-performance-dashboard.html",
+    "open:api:compliance:report": "npm run build && start dashboards/api/api-contract-compliance.html",
+    "open:api:coverage:report": "npm run build && start dashboards/api/api-coverage-analysis.html"
+
   },
   "keywords": [],
   "author": "",
@@ -27,11 +37,25 @@
   "devDependencies": {
     "@faker-js/faker": "^9.7.0",
     "@playwright/test": "^1.52.0",
+    "@testcontainers/mongodb": "^10.24.2",
+    "@testcontainers/postgresql": "^10.24.2",
+    "@types/mongodb": "^4.0.6",
+    "@types/mssql": "^9.1.7",
     "@types/node": "^22.15.2",
+    "@types/oracledb": "^6.6.0",
+    "@types/pg": "^8.11.14",
     "allure-playwright": "^3.2.1",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
-    "xlsx": "^0.18.5"
+    "mongodb": "^6.16.0",
+    "mssql": "^11.0.1",
+    "oracledb": "^6.8.0",
+    "pg": "^8.15.6",
+    "testcontainers": "^10.24.2",
+    "xlsx": "^0.18.5",
+    "@anthropic-ai/sdk": "^0.18.0", 
+    "@model-context-protocol/node": "^0.1.0",
+    "langchain": "^0.1.25"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
@@ -41,6 +65,9 @@
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "fs-extra": "^11.3.0"
+    "fs-extra": "^11.3.0",
+    "ts-node": "^10.9.2",
+    "dotenv": "^16.4.5",
+    "model-context-protocol": "^0.1.0"
   }
 }

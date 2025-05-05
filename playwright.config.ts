@@ -1,5 +1,7 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test';
-import { env } from './env';
+import { webConfig } from './src/lib/config/webConfig';
+import { apiConfig } from './src/lib/config/apiConfig';
+import { globalConfig } from './src/lib/config/globalConfig';
 
 /**
  * Read environment variables from file.
@@ -11,15 +13,20 @@ import { env } from './env';
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: './src/tests',
+  testDir: '.',
+testMatch: [
+  'src/tests/**/*.spec.{js,ts}',
+  'src/web/tests/**/*.spec.{js,ts}',
+  'src/api/tests/**/*.spec.{js,ts}',
+],
   /* Maximum time one test can run for. */
-  timeout: env.playwright.defaultTimeout || 30000,
+  timeout: 60000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000
+    timeout: 10000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -37,7 +44,7 @@ const config: PlaywrightTestConfig = {
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: env.playwright.baseUrl || 'http://localhost:3000',
+    baseURL: webConfig.baseUrl || 'https://magento.softwaretestingboard.com',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -56,6 +63,7 @@ const config: PlaywrightTestConfig = {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        headless: webConfig.headless,
       },
     },
 
@@ -101,8 +109,6 @@ const config: PlaywrightTestConfig = {
       },
     },
   ],
-
-  /* Define environment variables */
 
   /* Run your local dev server before starting the tests */
   // webServer: {

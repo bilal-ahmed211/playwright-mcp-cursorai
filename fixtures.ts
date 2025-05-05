@@ -1,8 +1,9 @@
 import { test as base, Page, BrowserContext, APIRequestContext, request, TestInfo } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
-import { env } from './env';
+// import { env } from './src/env';
 import { chromium, firefox, webkit } from '@playwright/test';
+import { webConfig } from './src/lib/config/webConfig';
 
 // Setup directories
 const tracesDir = 'traces';
@@ -27,13 +28,13 @@ export const test = base.extend<CustomFixtures>({
     
     const context = await browser.newContext({
       acceptDownloads: true,
-      recordVideo: env.playwright.isVideoEnabled ? { dir: 'screenshots' } : undefined,
+      recordVideo: webConfig.isVideoEnabled ? { dir: 'screenshots' } : undefined,
       // viewport: null,
       ignoreHTTPSErrors: true,
     });
     
     // Set up browser logging if enabled
-    if (env.playwright.isBrowserLogsEnabled) {
+    if (webConfig.isBrowserLogsEnabled) {
       context.on('weberror', (webError) => {
         console.log(`Uncaught exception: "${JSON.stringify(webError.error)}"`);
       });
@@ -80,7 +81,7 @@ export const test = base.extend<CustomFixtures>({
       console.log(`Screenshot saved to: ${screenshotPath}`);
       
       // Add video if enabled
-      if (env.playwright.isVideoEnabled) {
+      if (webConfig.isVideoEnabled) {
         const video = page.video();
         if (video) {
           const videoPath = await video.path();
